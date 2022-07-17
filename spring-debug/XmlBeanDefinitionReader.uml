@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.springframework.beans.factory.xml.XmlBeanDefinitionReader</OriginalElement>
+  <nodes>
+    <node x="118.0" y="222.0">org.springframework.beans.factory.xml.XmlBeanDefinitionReader</node>
+    <node x="284.0" y="0.0">org.springframework.beans.factory.support.BeanDefinitionReader</node>
+    <node x="0.0" y="0.0">org.springframework.core.env.EnvironmentCapable</node>
+    <node x="88.0" y="111.0">org.springframework.beans.factory.support.AbstractBeanDefinitionReader</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.springframework.beans.factory.xml.XmlBeanDefinitionReader" target="org.springframework.beans.factory.support.AbstractBeanDefinitionReader">
+      <point x="0.0" y="-30.5" />
+      <point x="0.0" y="30.5" />
+    </edge>
+    <edge source="org.springframework.beans.factory.support.AbstractBeanDefinitionReader" target="org.springframework.beans.factory.support.BeanDefinitionReader">
+      <point x="96.0" y="-30.5" />
+      <point x="376.0" y="86.0" />
+      <point x="428.0" y="86.0" />
+      <point x="0.0" y="30.5" />
+    </edge>
+    <edge source="org.springframework.beans.factory.support.AbstractBeanDefinitionReader" target="org.springframework.core.env.EnvironmentCapable">
+      <point x="-96.0" y="-30.5" />
+      <point x="184.0" y="86.0" />
+      <point x="132.0" y="86.0" />
+      <point x="0.0" y="30.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="286.0" y="141.5" />
+  <SelectedNodes>
+    <node>org.springframework.beans.factory.xml.XmlBeanDefinitionReader</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

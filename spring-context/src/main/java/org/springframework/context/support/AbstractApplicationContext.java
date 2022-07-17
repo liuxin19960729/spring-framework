@@ -493,6 +493,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	//---------------------------------------------------------------------
 
 	/**
+	 * //设置父ApplicationContext
 	 * Set the parent of this application context.
 	 * <p>The parent {@linkplain ApplicationContext#getEnvironment() environment} is
 	 * {@linkplain ConfigurableEnvironment#merge(ConfigurableEnvironment) merged} with
@@ -555,7 +556,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
-			// Prepare this context for refreshing.
+			// Prepare this context for refreshing. evement.property验证 ,  事件准备
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
@@ -626,9 +627,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
-		this.startupDate = System.currentTimeMillis();
-		this.closed.set(false);
-		this.active.set(true);
+		this.startupDate = System.currentTimeMillis();//, setting its startup date and
+		this.closed.set(false);//close准固态设置
+		this.active.set(true);//设计激活状态
 
 		if (logger.isDebugEnabled()) {
 			if (logger.isTraceEnabled()) {
@@ -640,9 +641,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
-		initPropertySources();
+		initPropertySources();//init 在环境上下文的 占位符属性
 
-		// Validate that all properties marked as required are resolvable:
+		// Validate that all properties marked as required are resolvable: 监听器准备
 		// see ConfigurablePropertyResolver#setRequiredProperties
 		getEnvironment().validateRequiredProperties();
 
@@ -657,7 +658,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Allow for the collection of early ApplicationEvents,
-		// to be published once the multicaster is available...
+		// to be published once the multicaster is available... 收集所有早期的Application Event 可用于对事件广播的发布
 		this.earlyApplicationEvents = new LinkedHashSet<>();
 	}
 
@@ -1079,6 +1080,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 *所有singleTon bean 被标记的 destroy-method方法将会调用
 	 * Template method for destroying all beans that this context manages.
 	 * The default implementation destroy all cached singletons in this context,
 	 * invoking {@code DisposableBean.destroy()} and/or the specified

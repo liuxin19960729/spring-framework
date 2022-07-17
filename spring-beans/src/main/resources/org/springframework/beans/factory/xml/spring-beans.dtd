@@ -41,6 +41,13 @@
 <!--
 	The document root. A document can contain bean definitions only,
 	imports only, or a mixture of both (typically with imports first).
+<!ELEMENT beans (
+	description?,
+	(import | alias | bean)*
+)>
+beans 元素
+description 0 or 1
+(import | alias | bean)  import | alias | bean  三种类型子元素任意多 0-任意多的个数
 -->
 <!ELEMENT beans (
 	description?,
@@ -50,6 +57,11 @@
 <!--
 	Default values for all bean definitions. Can be overridden at
 	the "bean" level. See those attribute definitions for details.
+beans 元素 属性默认值
+ default-lazy-init (true | false) "false"  default false  (true | false)  枚举类型
+
+  default-init-method CDATA #IMPLIED 不是必须的  CDATA character data
+  default-destroy-method CDATA #IMPLIED 不是必须的  CDATA character data
 -->
 <!ATTLIST beans default-lazy-init (true | false) "false">
 <!ATTLIST beans default-merge (true | false) "false">
@@ -61,39 +73,48 @@
 	Element containing informative text describing the purpose of the enclosing
 	element. Always optional.
 	Used primarily for user documentation of XML bean definition documents.
+	<!ELEMENT description (#PCDATA)>  PCDATA类型  文档描述信息
 -->
 <!ELEMENT description (#PCDATA)>
 
 
 <!--
 	Specifies an XML bean definition resource to import.
+	<import resource="application.xml"></import> 导入资源
 -->
 <!ELEMENT import EMPTY>
 
 <!--
 	The relative resource location of the XML bean definition file to import,
 	for example "myImport.xml" or "includes/myImport.xml" or "../myImport.xml".
+
+ <import>  resource 元素必须写 类型字符串(CDATA)
 -->
 <!ATTLIST import resource CDATA #REQUIRED>
 
 
 <!--
 	Defines an alias for a bean, which can reside in a different definition file.
+
+  <alias></alias> 对于Bean的别名定义
 -->
 <!ELEMENT alias EMPTY>
 
 <!--
 	The name of the bean to define an alias for.
+  name 必须   alias name CDATA #REQUIRED 字符串
 -->
 <!ATTLIST alias name CDATA #REQUIRED>
 
 <!--
 	The alias name to define for the bean.
+	bean定义别名
 -->
 <!ATTLIST alias alias CDATA #REQUIRED>
 
 <!--
 	Allows for arbitrary metadata to be attached to a bean definition.
+	源数据附属到 beanDefinition
 -->
 <!ELEMENT meta EMPTY>
 
@@ -126,6 +147,8 @@
 	in Java code using a name that's illegal as an XML id, use the optional
 	"name" attribute. If neither is given, the bean class name is used as id
 	(with an appended counter like "#2" if there is already a bean with that name).
+bean 通过id被识别
+!ATTLIST bean id ID #IMPLIED  id  ID 唯一 但是不是必须的
 -->
 <!ATTLIST bean id ID #IMPLIED>
 
@@ -133,17 +156,23 @@
 	Optional. Can be used to create one or more aliases illegal in an id.
 	Multiple aliases can be separated by any number of spaces, commas, or
 	semi-colons (or indeed any mixture of the three).
+
+!ATTLIST bean name CDATA #IMPLIED name CDATA 不是必须的
+
 -->
 <!ATTLIST bean name CDATA #IMPLIED>
 
 <!--
 	Each bean definition must specify the fully qualified name of the class,
 	except if it serves only as a parent definition for child bean definitions.
+
+ATTLIST bean class CDATA #IMPLIED 字符串 指定全类路径
+
 -->
 <!ATTLIST bean class CDATA #IMPLIED>
 
 <!--
-	Optionally specify a parent bean definition.
+	Optionally specify a parent bean definition. //选择指定一个父定义
 
 	Will use the bean class of the parent if none specified, but can
 	also override it. In the latter case, the child bean class must be
@@ -157,6 +186,8 @@
 
 	The remaining settings will always be taken from the child definition:
 	depends on, autowire mode, dependency check, scope, lazy init.
+
+使用父设置 如果设置新的参数会覆盖父的参数
 -->
 <!ATTLIST bean parent CDATA #IMPLIED>
 
@@ -171,13 +202,21 @@
 	might be supported by extended bean factories (for example, in a
 	web environment).
 
-	Note: This attribute will not be inherited by child bean definitions.
-	Hence, it needs to be specified per concrete bean definition.
+	Note: This attribute will not be inherited 继承 by child bean definitions.
+	Hence, it needs to be specified per concrete(确实 实在) bean definition.
 
 	Inner bean definitions inherit the singleton status of their containing
 	bean definition, unless explicitly specified: The inner bean will be a
 	singleton if the containing bean is a singleton, and a prototype if
 	the containing bean has any other scope.
+
+default singelton 单例
+prototype 工厂
+
+web 环境下扩展了
+"request" or "session"
+
+
 -->
 <!ATTLIST bean scope CDATA #IMPLIED>
 
@@ -189,72 +228,87 @@
 
 	Note: This attribute will not be inherited by child bean definitions.
 	Hence, it needs to be specified per abstract bean definition.
+
+bean  abstract   (true | false) 枚举类型  IMPLIED 可不写 def false
+
+true 就告诉不能实例化改Bean
+note: 这并不能够通过子 child bean 进行继承,因此需要指定每个抽象类的bean定义
+
+
 -->
 <!ATTLIST bean abstract (true | false) #IMPLIED>
 
 <!--
 	If this bean should be lazily initialized.
-	If false, it will get instantiated on startup by bean factories
+	If false, it will get instantiated on startup by bean factories// 气动时创建
 	that perform eager initialization of singletons.
 
-	Note: This attribute will not be inherited by child bean definitions.
-	Hence, it needs to be specified per concrete bean definition.
+	Note: This attribute will not be inherited by child bean definitions.不会被孩子 childbean 继承
+	Hence, it needs to be specified per concrete bean definition. 需要具体指明每一BeanDefinition
+
 -->
 <!ATTLIST bean lazy-init (true | false | default) "default">
 
 <!--
-	Optional attribute controlling whether to "autowire" bean properties.
+	Optional attribute controlling whether to "autowire 自动装配" bean properties.
 	This is an automagical process in which bean references don't need to be coded
-	explicitly in the XML bean definition file, but Spring works out dependencies.
+	explicitly in the XML bean definition file(不需要再代码xml bean definition), but Spring works out dependencies.
 
 	There are 5 modes:
 
-	1. "no"
+	1. "no" 传统spring 默认，bean 引用必须 ref 标明
 	The traditional Spring default. No automagical wiring. Bean references
-	must be defined in the XML file via the <ref> element. We recommend this
-	in most cases as it makes documentation more explicit.
+	must be defined in the XML file via the <ref> element. We recommend(劝告)  this
+	in most cases as it makes documentation more explicit.在大多数情况下他使文档更加清晰
 
-	2. "byName"
+	2. "byName" 通过名字自动装配, Cat classBean expose(暴露) dog property,会通过寻找名字自动装配
 	Autowiring by property name. If a bean of class Cat exposes a dog property,
-	Spring will try to set this to the value of the bean "dog" in the current factory.
-	If there is no matching bean by name, nothing special happens.
+	Spring will try to set this to the value of the bean "dog" in the current factory.(尝试在当前)
+	Spring will try to set this to the value of the bean "dog" in the current factory.(尝试在当前工厂里面去寻找)
+	If there is no matching bean by name, nothing special happens.如果没有匹配的名字,则不会发生任何事情
 
-	3. "byType"
+	3. "byType" 通过属性的Type自动装配,如果在当前的工厂有超过一个Type则会发生错误
 	Autowiring if there is exactly one bean of the property type in the bean factory.
 	If there is more than one, a fatal error is raised, and you can't use byType
 	autowiring for that bean. If there is none, nothing special happens.
 
-	4. "constructor"
-	Analogous to "byType" for constructor arguments. If there isn't exactly one bean
+	4. "constructor"  没有精确的和 construct() 之间参数没有精确的参数类型进行匹配发生错误
+	Analogous(相似) to "byType" for constructor arguments. If there isn't exactly one bean
 	of the constructor argument type in the bean factory, a fatal error is raised.
 
-	5. "autodetect"
+	5. "autodetect"  "constructor" or "byType" 自动进行判断
 	Chooses "constructor" or "byType" through introspection of the bean class.
-	If a default constructor is found, "byType" gets applied.
+	If a default constructor is found, "byType" gets applied.(发现无参构造 启用byType)
 
 	The latter two are similar to PicoContainer and make bean factories simple to
 	configure for small namespaces, but doesn't work as well as standard Spring
 	behaviour for bigger applications.
-
+    // e. "property" and "constructor-arg" elements 定义的更加清晰
 	Note that explicit dependencies, i.e. "property" and "constructor-arg" elements,
-	always override autowiring. Autowire behavior can be combined with dependency
-	checking, which will be performed after all autowiring has been completed.
+	always override autowiring. Autowire behavior can be combined(联合) with dependency
+	checking, which will be performed after all autowiring has been completed.(依赖检查早自动装配完成之后执行)
 
-	Note: This attribute will not be inherited by child bean definitions.
+	Note: This attribute will not be inherited by child bean definitions.//属性不被 child 定义
 	Hence, it needs to be specified per concrete bean definition.
+
+
+ATTLIST bean autowire (no | byName | byType | constructor | autodetect | default) "default"
 -->
 <!ATTLIST bean autowire (no | byName | byType | constructor | autodetect | default) "default">
 
 <!--
-	The names of the beans that this bean depends on being initialized.
-	The bean factory will guarantee that these beans get initialized before.
-
+	The names of the beans that this bean depends on being initialized.被初始化所依赖的的bean的名称
+	The bean factory will guarantee that these beans get initialized before. bean factoy保证 这些bean在获得之前已经初始化
+     //note: 依赖通常使用 bean properties 和 constructor arguments 来表示
 	Note that dependencies are normally expressed through bean properties or
 	constructor arguments. This property should just be necessary for other kinds
-	of dependencies like statics (*ugh*) or database preparation on startup.
+	of dependencies like statics (*ugh*) or database preparation on startup.这个属性通常用于其他类型的依赖(例 static)
 
-	Note: This attribute will not be inherited by child bean definitions.
-	Hence, it needs to be specified per concrete bean definition.
+	Note: This attribute will not be inherited by child bean definitions.//不被child 继承
+	Hence, it needs to be specified per concrete bean definition.他需要真实的指导Bean definition
+
+ATTLIST bean depends-on CDATA #IMPLIED 不是必须的
+
 -->
 <!ATTLIST bean depends-on CDATA #IMPLIED>
 
@@ -263,6 +317,9 @@
 	for matching candidates to satisfy another bean's autowiring requirements.
 	Note that this does not affect explicit references by name, which will get
 	resolved even if the specified bean is not marked as an autowire candidate.
+
+autowire-candidate(候选人)   byName 自动装配是不允许的
+
 -->
 <!ATTLIST bean autowire-candidate (true | false) #IMPLIED>
 
@@ -270,6 +327,10 @@
 	Optional attribute for the name of the custom initialization method
 	to invoke after setting bean properties. The method must have no arguments,
 	but may throw any exception.
+
+	自定义初始化方法
+
+	init-method 方法  必须没有参数  可能抛出异常
 -->
 <!ATTLIST bean init-method CDATA #IMPLIED>
 
@@ -281,6 +342,9 @@
 	Note: Only invoked on beans whose lifecycle is under full control
 	of the factory - which is always the case for singletons, but not
 	guaranteed for any other scope.
+	只保证 singleTon 允许执行  ，其他scope不进行保证
+
+
 -->
 <!ATTLIST bean destroy-method CDATA #IMPLIED>
 
@@ -288,12 +352,13 @@
 	Optional attribute specifying the name of a factory method to use to
 	create this object. Use constructor-arg elements to specify arguments
 	to the factory method, if it takes arguments. Autowiring does not apply
-	to factory methods.
+	to factory methods.使用 constructor-arg elements element 启用指定一个 工厂方法
 
+    在bean 标签上  以 class 属性存在    factory-method 是一个静态方法
 	If the "class" attribute is present, the factory method will be a static
 	method on the class specified by the "class" attribute on this bean
 	definition. Often this will be the same class as that of the constructed
-	object - for example, when the factory method is used as an alternative
+	object - for example, when the factory method is used as an alternative(n 可替代的东西)
 	to a constructor. However, it may be on a different class. In that case,
 	the created object will *not* be of the class specified in the "class"
 	attribute. This is analogous to FactoryBean behavior.
@@ -304,12 +369,14 @@
 	bean may be defined as a singleton or a prototype.
 
 	The factory method can have any number of arguments. Autowiring is not
-	supported. Use indexed constructor-arg elements in conjunction with the
+	supported. Use indexed constructor-arg elements in conjunction(接合  连同) with the
 	factory-method attribute.
 
 	Setter Injection can be used in conjunction with a factory method.
 	Method Injection cannot, as the factory method returns an instance,
 	which will be used when the container creates the bean.
+
+factory-method 是在容器中创建bean时使用代替 class 反射创建对象
 -->
 <!ATTLIST bean factory-method CDATA #IMPLIED>
 
@@ -320,6 +387,13 @@
 	ancestor factories that contains the relevant factory method.
 	This allows the factory itself to be configured using Dependency
 	Injection, and an instance (rather than static) method to be used.
+
+factory-bean 代替 class 对象 的factory-method方法的还用
+
+实例对象的指定 factory-bean=""
+允许实例对象的方法(非静态) method-factory =""
+
+
 -->
 <!ATTLIST bean factory-bean CDATA #IMPLIED>
 
@@ -334,6 +408,12 @@
 
 	constructor-arg elements are also used in conjunction with the factory-method
 	element to construct beans using static or instance factory methods.
+
+
+constructor-arg 元素
+ description  0 || 1 个字元素
+
+
 -->
 <!ELEMENT constructor-arg (
 	description?,

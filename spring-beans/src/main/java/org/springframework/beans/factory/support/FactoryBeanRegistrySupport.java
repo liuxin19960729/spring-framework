@@ -27,6 +27,7 @@ import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.lang.Nullable;
 
 /**
+ * 对于单例注册能够去处理FactoryBean的单例实力,综合DefaultSingletonBeanRegistry 的一些功能
  * Support base class for singleton registries which need to handle
  * {@link org.springframework.beans.factory.FactoryBean} instances,
  * integrated with {@link DefaultSingletonBeanRegistry}'s singleton management.

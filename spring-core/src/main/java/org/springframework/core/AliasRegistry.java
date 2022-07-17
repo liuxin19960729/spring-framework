@@ -22,6 +22,8 @@ package org.springframework.core;
  *
  * @author Juergen Hoeller
  * @since 2.5.2
+ * Alias 增删改查
+ * 组要服务于BeanDefinitionRegistry 接口
  */
 public interface AliasRegistry {
 

@@ -1,4 +1,4 @@
 package com.liuxin.entity;
 
-public class C {
+public class C extends Pc {
 }

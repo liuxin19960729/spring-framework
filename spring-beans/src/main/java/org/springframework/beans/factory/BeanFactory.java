@@ -21,52 +21,63 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
- * The root interface for accessing a Spring bean container.
+ * The root interface for accessing a Spring bean container.//访问bean 容器的根接口
  *
- * <p>This is the basic client view of a bean container;
+ * <p>This is the basic client view of a bean container;//bean容器的基本客户端视图
  * further interfaces such as {@link ListableBeanFactory} and
  * {@link org.springframework.beans.factory.config.ConfigurableBeanFactory}
- * are available for specific purposes.
+ * are available for specific purposes.//ListableBeanFactory 和 ConfigurableBeanFactory 是BeanFactory的特殊视图的实现
  *
  * <p>This interface is implemented by objects that hold a number of bean definitions,
+ * //接口通过获取大量的Bean definitions 实现 使用唯一的名字作为认证
  * each uniquely identified by a String name. Depending on the bean definition,
  * the factory will return either an independent instance of a contained object
+ * //工厂返回没有依赖原型对象 or 返回没有依赖的单例对象(一个)
+ * //工厂返回没有依赖原型对象 or 返回没有依赖的单例对象(一个超级单例设计模式)
  * (the Prototype design pattern), or a single shared instance (a superior
  * alternative to the Singleton design pattern, in which the instance is a
  * singleton in the scope of the factory). Which type of instance will be returned
  * depends on the bean factory configuration: the API is the same. Since Spring
  * 2.0, further scopes are available depending on the concrete application
- * context (e.g. "request" and "session" scopes in a web environment).
+ * context (e.g. "request" and "session" scopes in a web environment). scope(范围 singleton property) 里面配置
  *
  * <p>The point of this approach is that the BeanFactory is a central registry
- * of application components, and centralizes configuration of application
+ * of application components,(靠经BeanFactory的点是BeanFactory的应用组件)
+ * and centralizes configuration of application
  * components (no more do individual objects need to read properties files,
  * for example). See chapters 4 and 11 of "Expert One-on-One J2EE Design and
  * Development" for a discussion of the benefits of this approach.
  *
  * <p>Note that it is generally better to rely on Dependency Injection
  * ("push" configuration) to configure application objects through setters
+ * // Inject 注入通过setters 和 construct进行的
  * or constructors, rather than use any form of "pull" configuration like a
  * BeanFactory lookup. Spring's Dependency Injection functionality is
- * implemented using this BeanFactory interface and its subinterfaces.
+ * implemented using this BeanFactory interface and its subinterfaces.//spring依赖注入通过 BeanFactory实现
  *
  * <p>Normally a BeanFactory will load bean definitions stored in a configuration
  * source (such as an XML document), and use the {@code org.springframework.beans}
  * package to configure the beans. However, an implementation could simply return
  * Java objects it creates as necessary directly in Java code. There are no
- * constraints on how the definitions could be stored: LDAP, RDBMS, XML,
+ * constraints(没有限制) on how the definitions could be stored: LDAP, RDBMS, XML,
  * properties file, etc. Implementations are encouraged to support references
- * amongst beans (Dependency Injection).
+ * amongst beans (Dependency Injection).//鼓励在Bean之间使用依赖注入进行引用
  *
- * <p>In contrast to the methods in {@link ListableBeanFactory}, all of the
- * operations in this interface will also check parent factories if this is a
+ * <p>In contrast）(差异) to the methods in {@link ListableBeanFactory}, all of the
+ * operations in this interface will also check parent factories(设备)
+ * ListableBeanFactory:所有的Beanfactory的操作会对父设备进行检查
+ *
+ * if this is a
  * {@link HierarchicalBeanFactory}. If a bean is not found in this factory instance,
  * the immediate parent factory will be asked. Beans in this factory instance
  * are supposed to override beans of the same name in any parent factory.
+ * HierarchicalBeanFactory： bean 没有发现,附近的parent factory直接询问，子BeanFactory 可以覆盖同名 父BeanFatory
+ *
  *
  * <p>Bean factory implementations should support the standard bean lifecycle interfaces
  * as far as possible. The full set of initialization methods and their standard order is:
  * <ol>
+ * BeanFactory 标准的生命周期
  * <li>BeanNameAware's {@code setBeanName}
  * <li>BeanClassLoaderAware's {@code setBeanClassLoader}
  * <li>BeanFactoryAware's {@code setBeanFactory}

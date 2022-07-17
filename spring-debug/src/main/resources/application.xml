@@ -2,9 +2,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<import resource="../../../resources/application_ext.xml"></import>
-	<bean id="A" class="com.liuxin.entity.A"  name="a,ab,ac" scope="singleton">
+	<import resource="application_ext.xml"></import>
+	<bean id="A" class="com.liuxin.entity.A" name="a,ab,ac" scope="singleton">
 
 	</bean>
-	<bean id="zz" parent="B"></bean>
+
+	<alias name="B" alias="bbb"></alias>
+
+	<bean id="pc" abstract="true" class="com.liuxin.entity.Pc"></bean>
+	<bean id="c" parent="A" class="com.liuxin.entity.C" ></bean>
+
+	<bean id="fmethod" class="com.liuxin.entity.FMethod" factory-method="factory" scope="prototype">
+		<constructor-arg index="0" value="1">
+
+		</constructor-arg>
+	</bean>
 </beans>

@@ -31,11 +31,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
 
 /**
+ *配置Facory的各种方法
+ *    提供设备去配置BeanFactory
  * Configuration interface to be implemented by most bean factories. Provides
  * facilities to configure a bean factory, in addition to the bean factory
  * client methods in the {@link org.springframework.beans.factory.BeanFactory}
  * interface.
- *
+ * 这个接口并不打算在普通引用程序中使用,这个接口只是为了能够在spring内部插件里面能够特殊的访问bean factotry配置方法
  * <p>This bean factory interface is not meant to be used in normal application
  * code: Stick to {@link org.springframework.beans.factory.BeanFactory} or
  * {@link org.springframework.beans.factory.ListableBeanFactory} for typical

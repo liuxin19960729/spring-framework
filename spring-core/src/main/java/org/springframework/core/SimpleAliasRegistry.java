@@ -40,6 +40,7 @@ import org.springframework.util.StringValueResolver;
  * @author Juergen Hoeller
  * @author Qimiao Chen
  * @since 2.5.2
+ * 实现Alias  aliasMap(ConcurrentHashMap 并发安全) 对 alias 做缓存
  */
 public class SimpleAliasRegistry implements AliasRegistry {
 

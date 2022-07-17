@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 /**
+ *  Ant-style 地址格式的resource加载地址
  * Strategy interface for resolving a location pattern (for example,
  * an Ant-style path pattern) into {@link Resource} objects.
  *
