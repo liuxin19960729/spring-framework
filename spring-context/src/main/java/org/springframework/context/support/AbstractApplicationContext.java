@@ -567,13 +567,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses. 在上下文子类里允许 bean factory aallow
-				postProcessBeanFactory(beanFactory);//扩展点 所有Bean已经加载完全 但是没有实例化
+				postProcessBeanFactory(beanFactory);//子类 prepareFactoryBean() 标准定义进行修改
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
 				// Invoke factory processors registered as beans in the context. 实例化 并 执行所有注册的BeanFactoryPostProcessor
-				invokeBeanFactoryPostProcessors(beanFactory);// invoke BeanFactoryPostProcessor
+				invokeBeanFactoryPostProcessors(beanFactory);// 注册 BeanFactoryPostProcessor 接口的对象到BeanFactory
 
-				// Register bean processors that intercept bean creation.主持BeanPostProcessor
+				// Register bean processors that intercept bean creation.注册BeanPostProcessor 到BeanFactory
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
@@ -615,7 +615,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
-				resetCommonCaches();
+				resetCommonCaches();//重置常见的内省缓存(单例的Bean可能不在需要元数据了)
 				contextRefresh.end();
 			}
 		}
@@ -695,7 +695,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
-		// Configure the bean factory with context callbacks. 注册BeanFactory context 回调
+		// Configure the bean factory with context callbacks. ApplicationContextAwareProcessor 和顺序接口没有任何关系 只和 注册顺序相关
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
@@ -775,7 +775,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Initialize the MessageSource.
-	 * Use parent's if none defined in this context. 初始化 MessageSource 没有 使用 patrent
+	 * Use parent's if none defined in this context.
 	 */
 	protected void initMessageSource() {
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
@@ -847,7 +847,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			DefaultLifecycleProcessor defaultProcessor = new DefaultLifecycleProcessor();
 			defaultProcessor.setBeanFactory(beanFactory);
 			this.lifecycleProcessor = defaultProcessor;
-			beanFactory.registerSingleton(LIFECYCLE_PROCESSOR_BEAN_NAME, this.lifecycleProcessor);
+			beanFactory.registerSingleton(LIFECYCLE_PROCESSOR_BEAN_NAME, this.lifecycleProcessor);//注册声明周期处理器
 			if (logger.isTraceEnabled()) {
 				logger.trace("No '" + LIFECYCLE_PROCESSOR_BEAN_NAME + "' bean, using " +
 						"[" + this.lifecycleProcessor.getClass().getSimpleName() + "]");
@@ -918,7 +918,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			getBean(weaverAwareName);
 		}
 
-		// Stop using the temporary ClassLoader for type matching.//停止使用临时的classLoader
+		// Stop using the temporary ClassLoader for type matching.//零时的classLoader 设置为null
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.定义metaData 不能够进一步修改
@@ -938,7 +938,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Clear context-level resource caches (such as ASM metadata from scanning).
 		clearResourceCaches();
 
-		// Initialize lifecycle processor for this context.
+		// Initialize lifecycle processor for this context. 初始化声明周期处理器
 		initLifecycleProcessor();
 
 		// Propagate refresh to lifecycle processor first.

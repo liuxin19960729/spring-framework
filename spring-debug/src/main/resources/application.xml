@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<import resource="classpath:./application_ext.xml"></import>
-	<bean id="A" class="com.liuxin.entity.A" name="a,ab,ac" scope="singleton">
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+profile="liuxin,123x">
+<!--	<import resource="classpath:./application_ext.xml"></import>-->
+<!--	<bean id="A" class="com.liuxin.entity.A"s name="a,ab,ac" scope="singleton">-->
 
-	</bean>
+<!--	</bean>-->
 
-	<alias name="B" alias="bbb"></alias>
+<!--	<alias name="B" alias="bbb"></alias>-->
 
-	<bean id="pc" abstract="true" class="com.liuxin.entity.Pc"></bean>
+<!--	<bean id="pc" abstract="true" class="com.liuxin.entity.Pc"></bean>-->
 
-	<bean id="fmethod" class="com.liuxin.entity.FMethod" factory-method="factory" scope="prototype">
-		<constructor-arg index="0" value="1">
+<!--	<bean id="fmethod" class="com.liuxin.entity.FMethod" factory-method="factory" scope="prototype">-->
+<!--		<constructor-arg index="0" value="1">-->
 
-		</constructor-arg>
-	</bean>
-	<bean id="setP" class="com.liuxin.entity.SetPro">
-		<property name="_a" ref="A"></property>
-	</bean>
-	<bean id="beanDefinitionRegisterPost" class="com.liuxin.entity.factorypostProcessor.BeanDefinitionRegistryPostProcessorTest"></bean>
-   <bean class="com.liuxin.entity.listens.TestApplicationListen"></bean>
+<!--		</constructor-arg>-->
+<!--	</bean>-->
+<!--	<bean id="setP" class="com.liuxin.entity.SetPro">-->
+<!--		<property name="_a" ref="A"></property>-->
+<!--	</bean>-->
+<!--	<bean id="beanDefinitionRegisterPost" class="com.liuxin.entity.factorypostProcessor.BeanDefinitionRegistryPostProcessorTest"></bean>-->
+<!--   <bean class="com.liuxin.entity.listens.TestApplicationListen"></bean>-->
 
-	<bean id="testDepend" class="com.liuxin.entity.TestDep">
-		<property name="ddDepn" ref="ddDepn"></property>
-	</bean>
-	<bean id="ddDepn" class="com.liuxin.entity.DDDepn"></bean>
+<!--	<bean id="testDepend" class="com.liuxin.entity.TestDep">-->
+<!--		<property name="ddDepn" ref="ddDepn"></property>-->
+<!--	</bean>-->
+<!--	<bean id="ddDepn" class="com.liuxin.entity.DDDepn"></bean>-->
+<!--	<bean class="com.liuxin.entity.beanPostProcessor.BeanPostProcessorTest"></bean>-->
+	<bean class="com.liuxin.entity.lifyCycle.LifeCycleTest" id="lifeCycleTest"></bean>
 </beans>

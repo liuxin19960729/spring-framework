@@ -17,6 +17,7 @@
 package org.springframework.context;
 
 /**
+ * 在ApplicationContext 处理声明周期的决策接口
  * Strategy interface for processing Lifecycle beans within the ApplicationContext.
  *
  * @author Mark Fisher

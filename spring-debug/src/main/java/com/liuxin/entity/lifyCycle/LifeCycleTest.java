@@ -1,4 +1,20 @@
 package com.liuxin.entity.lifyCycle;
 
-public class LifeCycleTest {
+import org.springframework.context.SmartLifecycle;
+
+public class LifeCycleTest implements SmartLifecycle {
+	@Override
+	public void start() {
+		System.out.println("start");
+	}
+
+	@Override
+	public void stop() {
+		System.out.println("stop");
+	}
+
+	@Override
+	public boolean isRunning() {
+		return false;
+	}
 }

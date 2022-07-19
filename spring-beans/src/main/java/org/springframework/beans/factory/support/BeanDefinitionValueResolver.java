@@ -110,6 +110,7 @@ public class BeanDefinitionValueResolver {
 
 
 	/**
+	 * 在BeanFactory 拿取任何引用到其他Bean, 可以是一个BeanDefinition ，通过创建一个相对应的 bean 实例
 	 * Given a PropertyValue, return a value, resolving any references to other
 	 * beans in the factory if necessary. The value could be:
 	 * <li>A BeanDefinition, which leads to the creation of a corresponding
@@ -129,7 +130,7 @@ public class BeanDefinitionValueResolver {
 	 */
 	@Nullable
 	public Object resolveValueIfNecessary(Object argName, @Nullable Object value) {
-		// We must check each value to see whether it requires a runtime reference
+		// We must check each value to see whether it requires a runtime reference 我们必须检查每一个值是否需要运行时引用
 		// to another bean to be resolved.
 		if (value instanceof RuntimeBeanReference ref) {
 			return resolveReference(argName, ref);

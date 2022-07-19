@@ -1,6 +1,7 @@
 package com.liuxin;
 
 import com.liuxin.entity.*;
+import com.liuxin.entity.lifyCycle.LifeCycleTest;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Test1 {
@@ -28,8 +29,8 @@ public class Test1 {
 //		FMethod bean2 = applicationContext.getBean(FMethod.class);
 //		System.out.println(bean2);
 
-
-		TestDep bean = applicationContext.getBean(TestDep.class);
-		System.out.println(bean.getDdDepn());
+		LifeCycleTest lifeCycleTest = applicationContext.getBean(LifeCycleTest.class);
+		System.out.println(lifeCycleTest);
+		System.out.println(lifeCycleTest.isRunning());
 	}
 }
