@@ -83,7 +83,7 @@ public class DelegatingEntityResolver implements EntityResolver {
 			throws SAXException, IOException {
 
 		if (systemId != null) {
-			if (systemId.endsWith(DTD_SUFFIX)) {
+			if (systemId.endsWith(DTD_SUFFIX)) {//通过文件结尾判断 DTD 或者 XSD
 				return this.dtdResolver.resolveEntity(publicId, systemId);
 			}
 			else if (systemId.endsWith(XSD_SUFFIX)) {

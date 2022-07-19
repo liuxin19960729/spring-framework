@@ -480,7 +480,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	//---------------------------------------------------------------------
 
 	/**
-	 * Central method of this class: creates a bean instance,
+	 * Central method of this class: creates a bean instance,创建一个对象的主要方法
 	 * populates the bean instance, applies post-processors, etc.
 	 * @see #doCreateBean
 	 */
@@ -1124,8 +1124,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected Object applyBeanPostProcessorsBeforeInstantiation(Class<?> beanClass, String beanName) {
 		for (InstantiationAwareBeanPostProcessor bp : getBeanPostProcessorCache().instantiationAware) {
 			Object result = bp.postProcessBeforeInstantiation(beanClass, beanName);
-			if (result != null) {
-				return result;
+			if (result != null) {				return result;
+
 			}
 		}
 		return null;

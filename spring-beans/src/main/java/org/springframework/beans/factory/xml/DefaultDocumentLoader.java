@@ -68,13 +68,13 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	@Override
 	public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,
 			ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {
-
+        // document builder factory
 		DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
 		}
 		DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);
-		return builder.parse(inputSource);
+		return builder.parse(inputSource);//开始解析
 	}
 
 	/**
@@ -88,14 +88,14 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	protected DocumentBuilderFactory createDocumentBuilderFactory(int validationMode, boolean namespaceAware)
 			throws ParserConfigurationException {
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();// 创建 facory 工厂
 		factory.setNamespaceAware(namespaceAware);
 
 		if (validationMode != XmlValidationModeDetector.VALIDATION_NONE) {
-			factory.setValidating(true);
+			factory.setValidating(true);//打开验证特性
 			if (validationMode == XmlValidationModeDetector.VALIDATION_XSD) {
 				// Enforce namespace aware for XSD...
-				factory.setNamespaceAware(true);
+				factory.setNamespaceAware(true);//打开命名空间处理特征
 				try {
 					factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);
 				}
@@ -114,6 +114,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	}
 
 	/**
+	 * 创建Javax 的DoucumenBuilder
 	 * Create a JAXP DocumentBuilder that this bean definition reader
 	 * will use for parsing XML documents. Can be overridden in subclasses,
 	 * adding further initialization of the builder.
@@ -128,12 +129,12 @@ public class DefaultDocumentLoader implements DocumentLoader {
 			@Nullable EntityResolver entityResolver, @Nullable ErrorHandler errorHandler)
 			throws ParserConfigurationException {
 
-		DocumentBuilder docBuilder = factory.newDocumentBuilder();
+		DocumentBuilder docBuilder = factory.newDocumentBuilder(); //docBuilder 解析对象
 		if (entityResolver != null) {
-			docBuilder.setEntityResolver(entityResolver);
+			docBuilder.setEntityResolver(entityResolver);//设置定位解析XML文档的实体
 		}
 		if (errorHandler != null) {
-			docBuilder.setErrorHandler(errorHandler);
+			docBuilder.setErrorHandler(errorHandler);//错误警告器
 		}
 		return docBuilder;
 	}

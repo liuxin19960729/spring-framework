@@ -1,4 +1,4 @@
-package com.liuxin.entity.listens;
+package com.liuxin.entity;
 
 public class DDDepn {
 }

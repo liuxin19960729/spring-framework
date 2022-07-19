@@ -1,8 +1,6 @@
 package com.liuxin;
 
-import com.liuxin.entity.A;
-import com.liuxin.entity.B;
-import com.liuxin.entity.FMethod;
+import com.liuxin.entity.*;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Test1 {
@@ -25,9 +23,13 @@ public class Test1 {
 ////		System.out.println(cldbp);
 //		System.out.println(applicationContext.getBean("c"));
 
-		FMethod bean1 = applicationContext.getBean(FMethod.class);
-		System.out.println(bean1);
-		FMethod bean2 = applicationContext.getBean(FMethod.class);
-		System.out.println(bean2);
+//		FMethod bean1 = applicationContext.getBean(FMethod.class);
+//		System.out.println(bean1);
+//		FMethod bean2 = applicationContext.getBean(FMethod.class);
+//		System.out.println(bean2);
+
+
+		TestDep bean = applicationContext.getBean(TestDep.class);
+		System.out.println(bean.getDdDepn());
 	}
 }

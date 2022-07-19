@@ -70,7 +70,12 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 		this.resourceLoader = resourceLoader;
 	}
 
-
+ /*
+ *dtd <!DOCTYPE bean SYSTEM> <beans>
+ *<!DOCTYPE beans  SYSTEM "http://www.springframework.org/schema/beans/spring-beans.dtd">
+ or <!DOCTYPE beans PUBLIC "xxx" "http://www.springframework.org/schema/beans/spring-beans.dtd">
+ *
+ * */
 	@Override
 	@Nullable
 	public InputSource resolveEntity(@Nullable String publicId, @Nullable String systemId)

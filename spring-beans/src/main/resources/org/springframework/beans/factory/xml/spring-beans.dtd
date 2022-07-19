@@ -424,6 +424,9 @@ constructor-arg 元素
 	The constructor-arg tag can have an optional index attribute,
 	to specify the exact index in the constructor argument list. Only needed
 	to avoid ambiguities, e.g. in case of 2 arguments of the same type.
+
+参数列表精确的index
+两个参数同样的类型下 避免模棱两可
 -->
 <!ATTLIST constructor-arg index CDATA #IMPLIED>
 
@@ -432,11 +435,16 @@ constructor-arg 元素
 	to specify the exact type of the constructor argument. Only needed
 	to avoid ambiguities, e.g. in case of 2 single argument constructors
 	that can both be converted from a String.
+
+精确但是指定类型 （Only needed to avoid ambiguitie)避免模棱两可
+
+
 -->
 <!ATTLIST constructor-arg type CDATA #IMPLIED>
 
 <!--
 	A short-cut alternative to a child element "ref bean=".
+	引用  bean
 -->
 <!ATTLIST constructor-arg ref CDATA #IMPLIED>
 
@@ -451,6 +459,10 @@ constructor-arg 元素
 	Property elements correspond to JavaBean setter methods exposed
 	by the bean classes. Spring supports primitives, references to other
 	beans in the same or related factories, lists, maps and properties.
+
+bean 定义  property
+和相对应的javaBean setter 方法相对用
+
 -->
 <!ELEMENT property (
 	description?, meta*,
@@ -461,6 +473,9 @@ constructor-arg 元素
 	The property name attribute is the name of the JavaBean property.
 	This follows JavaBean conventions: a name of "age" would correspond
 	to setAge()/optional getAge() methods.
+	age mapping  setAge
+	name mapping setName
+	_a mapping  set_a
 -->
 <!ATTLIST property name CDATA #REQUIRED>
 
@@ -481,6 +496,9 @@ constructor-arg 元素
 	It's particularly useful as an alternative to implementing the BeanFactoryAware
 	interface, in order to be able to make getBean() calls for non-singleton instances
 	at runtime. In this case, Method Injection is a less invasive alternative.
+
+这是一个方法注入的形式,这个 BeanFactoryAware interfaces 的特代实现  非常有用,
+为了在运行时  getBean()在非单例模式调用 ,方法注入微创
 -->
 <!ELEMENT lookup-method EMPTY>
 
@@ -492,8 +510,10 @@ constructor-arg 元素
 <!--
 	Name of the bean in the current or ancestor factories that the lookup method
 	should resolve to. Often this bean will be a prototype, in which case the
-	lookup method will return a distinct instance on every invocation. This
+	lookup method will return a distinct(不同有区别) instance on every invocation. This
 	is useful for single-threaded objects.
+
+在当前或祖先工厂里使用bean的名称查找方法.当这个bean是个原型时每次执行返回不同有区别的实例,(动态代理)
 -->
 <!ATTLIST lookup-method bean CDATA #IMPLIED>
 
@@ -501,7 +521,10 @@ constructor-arg 元素
 <!--
 	Similar to the lookup method mechanism, the replaced-method element is used to control
 	IoC container method overriding: Method Injection. This mechanism allows the overriding
-	of a method with arbitrary code.
+	of a method with arbitrary(谁心所欲) code.
+
+replaced-method 元素 和 lookup-method 相似的机制，用于 IOC 容器方法的替换,这个机制允许任意的替换代码
+(arg-type)* 允许多个参数
 -->
 <!ELEMENT replaced-method (
 	(arg-type)*
@@ -512,6 +535,7 @@ constructor-arg 元素
 	If this method is not overloaded, there's no need to use arg-type subelements.
 	If this method is overloaded, arg-type subelements must be used for all
 	override definitions for the method.
+
 -->
 <!ATTLIST replaced-method name CDATA #IMPLIED>
 
@@ -520,12 +544,16 @@ constructor-arg 元素
 	or ancestor factories. This may be a singleton or prototype bean. If it's
 	a prototype, a new instance will be used for each method replacement.
 	Singleton usage is the norm.
+
+
 -->
 <!ATTLIST replaced-method replacer CDATA #IMPLIED>
 
 <!--
 	Subelement of replaced-method identifying an argument for a replaced method
 	in the event of method overloading.
+replaced-method 的子元素
+方法重载时做替换参数的认证
 -->
 <!ELEMENT arg-type (#PCDATA)>
 
@@ -539,6 +567,7 @@ constructor-arg 元素
 
 	As the number of arguments will be checked also, this convenience can often
 	be used to save typing.
+math 属性 写入参数类型值
 -->
 <!ATTLIST arg-type match CDATA #IMPLIED>
 
@@ -546,6 +575,7 @@ constructor-arg 元素
 <!--
 	Defines a reference to another bean in this factory or an external
 	factory (parent or included factory).
+引入一个bean 引用(current factory or parent factory)
 -->
 <!ELEMENT ref EMPTY>
 
@@ -556,6 +586,9 @@ constructor-arg 元素
 	Local references, using the "local" attribute, have to use bean ids;
 	they can be checked by this DTD, thus should be preferred for references
 	within the same bean factory XML file.
+bean 引用另一个bean的名称
+local: 必须使用bean ids
+
 -->
 <!ATTLIST ref bean CDATA #IMPLIED>
 <!ATTLIST ref local IDREF #IMPLIED>
@@ -578,6 +611,8 @@ constructor-arg 元素
 	Local references, using the "local" attribute, have to use bean ids;
 	they can be checked by this DTD, thus should be preferred for references
 	within the same bean factory XML file.
+bean : 通过名字来引用
+local :通过id值来引用
 -->
 <!ATTLIST idref bean CDATA #IMPLIED>
 <!ATTLIST idref local IDREF #IMPLIED>
@@ -608,6 +643,7 @@ constructor-arg 元素
 	Denotes a Java null value. Necessary because an empty "value" tag
 	will resolve to an empty String, which will not be resolved to a
 	null value unless a special PropertyEditor does so.
+	java null 值的符号
 -->
 <!ELEMENT null (#PCDATA)>
 
@@ -618,6 +654,8 @@ constructor-arg 元素
 	although references will be strongly typed.
 	A list can also map to an array type. The necessary conversion
 	is automatically performed by the BeanFactory.
+集合元素(java内部)
+list 也可以作为 array(beanfacory 会自行转换)
 -->
 <!ELEMENT list (
 	(bean | ref | idref | value | null | list | set | map | props)*
@@ -718,6 +756,7 @@ constructor-arg 元素
 <!--
 	Props elements differ from map elements in that values must be strings.
 	Props may be empty.
+value 必须是字符串
 -->
 <!ELEMENT props (
 	(prop)*
@@ -737,6 +776,7 @@ constructor-arg 元素
 
 <!--
 	Each property element must specify its key.
+	每个属性元素必须指定他们的键
 -->
 <!ATTLIST prop key CDATA #REQUIRED>
 

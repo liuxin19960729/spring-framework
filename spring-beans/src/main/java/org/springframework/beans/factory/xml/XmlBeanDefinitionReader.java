@@ -123,7 +123,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	@Nullable
 	private EntityResolver entityResolver;
-
+	// xml 简单的错误处理器
 	private ErrorHandler errorHandler = new SimpleSaxErrorHandler(logger);
 
 	private final XmlValidationModeDetector validationModeDetector = new XmlValidationModeDetector();
@@ -261,7 +261,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	/**
 	 * Return the EntityResolver to use, building a default resolver
-	 * if none specified.
+	 * if none specified
+	 *
+	 * 如果没有指定解析器 构建一个默认的解析器
 	 */
 	protected EntityResolver getEntityResolver() {
 		if (this.entityResolver == null) {
@@ -390,7 +392,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 		try {
 			Document doc = doLoadDocument(inputSource, resource);
-			int count = registerBeanDefinitions(doc, resource);
+			int count = registerBeanDefinitions(doc, resource);//解析
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
 			}
@@ -448,21 +450,25 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see #detectValidationMode
 	 */
 	protected int getValidationModeForResource(Resource resource) {
-		int validationModeToUse = getValidationMode();
+		int validationModeToUse = getValidationMode();//检查有没有显示的配置XMl验证模式
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
 		}
-		int detectedMode = detectValidationMode(resource);
+		int detectedMode = detectValidationMode(resource);//通过检查文件中有没有DOCTYPE来判断 类型
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
 		}
-		// Hmm, we didn't get a clear indication... Let's assume XSD,
+		// Hmm, we didn't get a clear indication... Let's assume XSD, 没有明确的指明就猜测 XSD
 		// since apparently no DTD declaration has been found up until
 		// detection stopped (before finding the document's root tag).
 		return VALIDATION_XSD;
 	}
 
 	/**
+	 * 检测XMl是那种方式DTD or XSD
+	 * 判断依据
+	 *     DTD <!DOCTYPE
+	 *     XSD 不是DTD 就是 XSD
 	 * Detect which kind of validation to perform on the XML file identified
 	 * by the supplied {@link Resource}. If the file has a {@code DOCTYPE}
 	 * definition then DTD validation is used otherwise XSD validation is assumed.
@@ -490,7 +496,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try {
-			return this.validationModeDetector.detectValidationMode(inputStream);
+			return this.validationModeDetector.detectValidationMode(inputStream);//note  throw exception  VALIDATION_AUTO
 		}
 		catch (IOException ex) {
 			throw new BeanDefinitionStoreException("Unable to determine validation mode for [" +
@@ -499,6 +505,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
+	 * 通过指定的Document 来注册 Bean Definition
 	 * Register the bean definitions contained in the given DOM document.
 	 * Called by {@code loadBeanDefinitions}.
 	 * <p>Creates a new instance of the parser class and invokes

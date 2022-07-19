@@ -1,4 +1,4 @@
-package com.liuxin;
+package com.liuxin.entity.factorypostProcessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -17,6 +17,5 @@ public class BeanDefinitionRegistryPostProcessorTest implements BeanDefinitionRe
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		System.out.println("beanFactory");
-		beanFactory.freezeConfiguration();
 	}
 }

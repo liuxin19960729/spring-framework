@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<import resource="application_ext.xml"></import>
+	<import resource="classpath:./application_ext.xml"></import>
 	<bean id="A" class="com.liuxin.entity.A" name="a,ab,ac" scope="singleton">
 
 	</bean>
@@ -10,11 +10,20 @@
 	<alias name="B" alias="bbb"></alias>
 
 	<bean id="pc" abstract="true" class="com.liuxin.entity.Pc"></bean>
-	<bean id="c" parent="A" class="com.liuxin.entity.C" ></bean>
 
 	<bean id="fmethod" class="com.liuxin.entity.FMethod" factory-method="factory" scope="prototype">
 		<constructor-arg index="0" value="1">
 
 		</constructor-arg>
 	</bean>
+	<bean id="setP" class="com.liuxin.entity.SetPro">
+		<property name="_a" ref="A"></property>
+	</bean>
+	<bean id="beanDefinitionRegisterPost" class="com.liuxin.entity.factorypostProcessor.BeanDefinitionRegistryPostProcessorTest"></bean>
+   <bean class="com.liuxin.entity.listens.TestApplicationListen"></bean>
+
+	<bean id="testDepend" class="com.liuxin.entity.TestDep">
+		<property name="ddDepn" ref="ddDepn"></property>
+	</bean>
+	<bean id="ddDepn" class="com.liuxin.entity.DDDepn"></bean>
 </beans>

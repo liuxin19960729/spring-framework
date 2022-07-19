@@ -396,6 +396,7 @@ public class BeanDefinitionParserDelegate {
 
 
 	/**
+	 * 解析 <bean><beab/>
 	 * Parses the supplied {@code <bean>} element. May return {@code null}
 	 * if there were errors during parse. Errors are reported to the
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
@@ -412,15 +413,15 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
-		String id = ele.getAttribute(ID_ATTRIBUTE);
-		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
-
+		String id = ele.getAttribute(ID_ATTRIBUTE);//id
+		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);//name
+		//name 就是别名 ,;"whitespace "
 		List<String> aliases = new ArrayList<>();
-		if (StringUtils.hasLength(nameAttr)) {
+		if (StringUtils.hasLength(nameAttr)) {//!""&& !null
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			aliases.addAll(Arrays.asList(nameArr));
 		}
-
+       //ID没有设置  默认使用 aliase 的第一个为beanName
 		String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
@@ -431,9 +432,9 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		if (containingBean == null) {
-			checkNameUniqueness(beanName, aliases, ele);
+			checkNameUniqueness(beanName, aliases, ele);//检查beanName是否是唯一
 		}
-
+        // beanDefinition 属性 相关 element 解析完全
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -442,7 +443,7 @@ public class BeanDefinitionParserDelegate {
 						beanName = BeanDefinitionReaderUtils.generateBeanName(
 								beanDefinition, this.readerContext.getRegistry(), true);
 					}
-					else {
+					else {//id 和 name 都不不能再使用类名作为baseName
 						beanName = this.readerContext.generateBeanName(beanDefinition);
 						// Register an alias for the plain bean class name, if still possible,
 						// if the generator returned the class name plus a suffix.
@@ -503,26 +504,26 @@ public class BeanDefinitionParserDelegate {
 		this.parseState.push(new BeanEntry(beanName));
 
 		String className = null;
-		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
+		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {//class 属性
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
 		String parent = null;
-		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
+		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {//parent 属性
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
 
 		try {
-			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
+			AbstractBeanDefinition bd = createBeanDefinition(className, parent);//BeanDefinition
 
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
-			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
-
+			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));//description 设置
+            // meta element
 			parseMetaElements(ele, bd);
-			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
-			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
-
+			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());//lookup-method element aop
+			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());//replaceup-method element aop
+			//cpnstructor-args elemnet
 			parseConstructorArgElements(ele, bd);
-			parsePropertyElements(ele, bd);
+			parsePropertyElements(ele, bd);//property element
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
@@ -547,6 +548,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 置顶Bean元素的属性引用到Bean 定义
 	 * Apply the attributes of the given bean element to the given bean * definition.
 	 * @param ele bean declaration element
 	 * @param beanName bean name
@@ -556,10 +558,10 @@ public class BeanDefinitionParserDelegate {
 	public AbstractBeanDefinition parseBeanDefinitionAttributes(Element ele, String beanName,
 			@Nullable BeanDefinition containingBean, AbstractBeanDefinition bd) {
 
-		if (ele.hasAttribute(SINGLETON_ATTRIBUTE)) {
+		if (ele.hasAttribute(SINGLETON_ATTRIBUTE)) {// 1.x 版本的 singleton 属性在现在版本中不存在
 			error("Old 1.x 'singleton' attribute in use - upgrade to 'scope' declaration", ele);
 		}
-		else if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
+		else if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {//scope 属性
 			bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
 		}
 		else if (containingBean != null) {
@@ -567,27 +569,27 @@ public class BeanDefinitionParserDelegate {
 			bd.setScope(containingBean.getScope());
 		}
 
-		if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
+		if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {// abstarct 属性 defaul false
 			bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
 		}
 
 		String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);
-		if (isDefaultValue(lazyInit)) {
+		if (isDefaultValue(lazyInit)) {//懒加载
 			lazyInit = this.defaults.getLazyInit();
 		}
 		bd.setLazyInit(TRUE_VALUE.equals(lazyInit));
 
 		String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);
-		bd.setAutowireMode(getAutowireMode(autowire));
+		bd.setAutowireMode(getAutowireMode(autowire));//autowire 模式
 
-		if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE)) {
-			String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
+		if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE)) {//depen-on="beanname"   beanname 的Bean 会在当前类之前进行初始化 ,;" " 可以设置多个
+ 			String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
 			bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
 		}
-
+		//autowire-candidate 默认为true
 		String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);
-		if (isDefaultValue(autowireCandidate)) {
-			String candidatePattern = this.defaults.getAutowireCandidates();
+		if (isDefaultValue(autowireCandidate)) {//没有定义这个属性
+			String candidatePattern = this.defaults.getAutowireCandidates();//设置为默认值
 			if (candidatePattern != null) {
 				String[] patterns = StringUtils.commaDelimitedListToStringArray(candidatePattern);
 				bd.setAutowireCandidate(PatternMatchUtils.simpleMatch(patterns, beanName));
@@ -597,7 +599,7 @@ public class BeanDefinitionParserDelegate {
 			bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
 		}
 
-		if (ele.hasAttribute(PRIMARY_ATTRIBUTE)) {
+		if (ele.hasAttribute(PRIMARY_ATTRIBUTE)) {//primary
 			bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));
 		}
 
@@ -619,10 +621,10 @@ public class BeanDefinitionParserDelegate {
 			bd.setEnforceDestroyMethod(false);
 		}
 
-		if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {
+		if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {//factory method
 			bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));
 		}
-		if (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) {
+		if (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) {//factory-bean
 			bd.setFactoryBeanName(ele.getAttribute(FACTORY_BEAN_ATTRIBUTE));
 		}
 
@@ -1483,10 +1485,11 @@ public class BeanDefinitionParserDelegate {
 
 
 	/**
+	 * 提供Node 的namespace URI
 	 * Get the namespace URI for the supplied node.
 	 * <p>The default implementation uses {@link Node#getNamespaceURI}.
 	 * Subclasses may override the default implementation to provide a
-	 * different namespace identification mechanism.
+	 * different namespace identification mechanism.提供不同的namespace 防止 subclass 覆盖
 	 * @param node the node
 	 */
 	@Nullable
@@ -1506,6 +1509,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * getNodeName() or getTagName()带有限定名 getLocalName() 本地名
 	 * Determine whether the name of the supplied node is equal to the supplied name.
 	 * <p>The default implementation checks the supplied desired name against both
 	 * {@link Node#getNodeName()} and {@link Node#getLocalName()}.
@@ -1519,6 +1523,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 判断是否是 spring的 namespace
 	 * Determine whether the given URI indicates the default namespace.
 	 */
 	public boolean isDefaultNamespace(@Nullable String namespaceUri) {

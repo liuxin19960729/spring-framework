@@ -9,8 +9,11 @@
 空元素
 <!ELEMENT 元素名称 EMPTY>
   <xxx/>  非<xxxx>....<xxxx/>
-PCDATA
+
+PCDATA 文本信息
 <!ELEMENT 元素名称 (#PCDATA)>
+0 个或者多个文本
+<!ELEMENT 元素名称 (#PCDATA)*>
 
 
 任何内容元素
@@ -36,6 +39,19 @@ PCDATA
 message|body 或node 必须出现一个
 <!ELEMENT note (to,from,header,(message|body))*> 上面的类型出现一次或者任意多的次数
 
+混合模式
+<!ELEMENT chapter (intro,(heading,(para|image|table|note))+)>
+
+文本元素合法
+<!ELEMENT name #PCDATA> 只包含文本
+
+<!ELEMENT name (#PCDATA|e1|e2)*> 包含任意顺序文本和标签
+
+除此之外其他类型都是非法
+ 例 <!ELEMENT name (#PCDATA,e1)> 
+
+
+
 ```
 
 ## 属性
@@ -57,19 +73,15 @@ IDREF 引用另一个元素ID
 IDREFS 引用其他元素的列表值
 
 NMTOKEN name xml token 合法的xml名称
-NMTOKENS 合法的xml名称列表
+NMTOKENS 合法的xml名称列表(以空白符隔开名字的标记列表)
 
-ENTITY 实体
+ENTITY 实体 映入一个未解析的外部实体
 ENTITIES 实体列表
-
-NOTATION 符号名称
-
-xml: 预定义的xml值
 
 
 #REQUIRED 属性值那必须的
 #IMPLIED 属性值不是必须的
-# FIXED value 属性值是固定的
+#FIXED value 属性值是固定的
 
 
 <!ATTLIST contact fax CDATA #IMPLIED>
@@ -89,6 +101,9 @@ xml: 预定义的xml值
 
 ## 实体
 ```
+作用:普通文本或特殊字符快捷方式变量
+
+
 <!ENTITY 实体名称 "实体的值">
 
 <!ENTITY writer "Bill Gates">
@@ -104,6 +119,30 @@ xml: 预定义的xml值
 <!ENTITY writer SYSTEM "http://www.w3school.com.cn/dtd/entities.dtd">
 <!ENTITY copyright SYSTEM "http://www.w3school.com.cn/dtd/entities.dtd">
 
+
+&writer 使用实体变量
+```
+## dtd 的引用
+```
+内部引入
+<?xml version="1.0"?>
+<!DOCTYPE configuration[
+    <!ELEMENT beans xxxx,xxxx>
+]>
+
+<beans>
+  
+</beans>
+
+
+外部引入
+<?xml version="1.0"?>
+<!DOCTYPE configuration SYSTEM "http://www.w3school.com.cn/dtd/note.dtd">
+
+```
+
+```
+解析器回删除开始和结尾的空白符
 
 
 ```
