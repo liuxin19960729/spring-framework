@@ -536,7 +536,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
-	 * Create the {@link XmlReaderContext} to pass over to the document reader.
+	 * Create the {@link XmlReaderContext} to pass over to the document reader.//创建Xml上下文
 	 */
 	public XmlReaderContext createReaderContext(Resource resource) {
 		return new XmlReaderContext(resource, this.problemReporter, this.eventListener,

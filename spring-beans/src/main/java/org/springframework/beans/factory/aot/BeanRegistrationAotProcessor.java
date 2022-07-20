@@ -25,7 +25,6 @@ import org.springframework.lang.Nullable;
  *
  * @author Phillip Webb
  * @since 6.0
- * @see BeanRegistrationAotContribution
  */
 @FunctionalInterface
 public interface BeanRegistrationAotProcessor {

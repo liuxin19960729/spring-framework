@@ -281,7 +281,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	/**
 	 * Override settings in this bean definition (presumably a copied parent
 	 * from a parent-child inheritance relationship) from the given bean
-	 * definition (presumably the child).
+	 * definition (presumably the child).//重新Bean定义的设置
 	 * <ul>
 	 * <li>Will override beanClass if specified in the given bean definition.
 	 * <li>Will always take {@code abstract}, {@code scope},
@@ -295,22 +295,22 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * </ul>
 	 */
 	public void overrideFrom(BeanDefinition other) {
-		if (StringUtils.hasLength(other.getBeanClassName())) {
+		if (StringUtils.hasLength(other.getBeanClassName())) {//className
 			setBeanClassName(other.getBeanClassName());
 		}
-		if (StringUtils.hasLength(other.getScope())) {
+		if (StringUtils.hasLength(other.getScope())) {//scope
 			setScope(other.getScope());
 		}
-		setAbstract(other.isAbstract());
-		if (StringUtils.hasLength(other.getFactoryBeanName())) {
+		setAbstract(other.isAbstract());//abstract
+		if (StringUtils.hasLength(other.getFactoryBeanName())) {//factoryName
 			setFactoryBeanName(other.getFactoryBeanName());
 		}
-		if (StringUtils.hasLength(other.getFactoryMethodName())) {
+		if (StringUtils.hasLength(other.getFactoryMethodName())) {//factor-method
 			setFactoryMethodName(other.getFactoryMethodName());
 		}
-		setRole(other.getRole());
-		setSource(other.getSource());
-		copyAttributesFrom(other);
+		setRole(other.getRole());//role
+		setSource(other.getSource());//source
+		copyAttributesFrom(other);//copy 属性
 
 		if (other instanceof AbstractBeanDefinition otherAbd) {
 			if (otherAbd.hasBeanClass()) {
@@ -458,7 +458,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		if (className == null) {
 			return null;
 		}
-		Class<?> resolvedClass = ClassUtils.forName(className, classLoader);
+		Class<?> resolvedClass = ClassUtils.forName(className, classLoader);//Class对象的家杂草
 		this.beanClass = resolvedClass;
 		return resolvedClass;
 	}
@@ -1047,7 +1047,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * Return whether this bean definition is 'synthetic', that is,
-	 * not defined by the application itself.
+	 * not defined by the application itself. 返回是否合成的通过Apllication它自己定义的
 	 */
 	public boolean isSynthetic() {
 		return this.synthetic;
@@ -1161,7 +1161,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public void prepareMethodOverrides() throws BeanDefinitionValidationException {
 		// Check that lookup methods exist and determine their overloaded status.
-		if (hasMethodOverrides()) {
+		if (hasMethodOverrides()) {//检查是否存在 lookup-method 和 replace-method
 			getMethodOverrides().getOverrides().forEach(this::prepareMethodOverride);
 		}
 	}

@@ -59,19 +59,19 @@ public class SimpleAliasRegistry implements AliasRegistry {
 		Assert.hasText(alias, "'alias' must not be empty");
 		synchronized (this.aliasMap) {
 			if (alias.equals(name)) {
-				this.aliasMap.remove(alias);
+				this.aliasMap.remove(alias);//alias 不村子 bename 和 别名同名  减少存储数据
 				if (logger.isDebugEnabled()) {
 					logger.debug("Alias definition '" + alias + "' ignored since it points to same name");
 				}
 			}
 			else {
 				String registeredName = this.aliasMap.get(alias);
-				if (registeredName != null) {
-					if (registeredName.equals(name)) {
+				if (registeredName != null) {//当前别名已经存在Map 里面
+					if (registeredName.equals(name)) {//beanName 在 aliasMap 注册
 						// An existing alias - no need to re-register
 						return;
 					}
-					if (!allowAliasOverriding()) {
+					if (!allowAliasOverriding()) {//不允许覆盖抛出异常
 						throw new IllegalStateException("Cannot define alias '" + alias + "' for name '" +
 								name + "': It is already registered for name '" + registeredName + "'.");
 					}
@@ -80,8 +80,8 @@ public class SimpleAliasRegistry implements AliasRegistry {
 								registeredName + "' with new target name '" + name + "'");
 					}
 				}
-				checkForAliasCircle(name, alias);
-				this.aliasMap.put(alias, name);
+				checkForAliasCircle(name, alias);//对北冥检查是否循环依赖  beanName-->alias  alias-->beanName
+				this.aliasMap.put(alias, name);//覆盖
 				if (logger.isTraceEnabled()) {
 					logger.trace("Alias definition '" + alias + "' registered for name '" + name + "'");
 				}
@@ -206,7 +206,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	}
 
 	/**
-	 * Determine the raw name, resolving aliases to canonical names.
+	 * Determine the raw name, resolving aliases to canonical names.将别名转换到原始名字
 	 * @param name the user-specified name
 	 * @return the transformed name
 	 */
@@ -215,7 +215,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 		// Handle aliasing...
 		String resolvedName;
 		do {
-			resolvedName = this.aliasMap.get(canonicalName);
+			resolvedName = this.aliasMap.get(canonicalName);//使用alias 获取 beanName
 			if (resolvedName != null) {
 				canonicalName = resolvedName;
 			}

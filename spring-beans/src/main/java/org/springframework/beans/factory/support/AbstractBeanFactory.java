@@ -307,13 +307,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
-						if (isDependent(beanName, dep)) {
+						if (isDependent(beanName, dep)) {//在注册循环依赖的Bean之前查看是否已经注册(注册 就是循环依赖)
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
 						}
 						registerDependentBean(dep, beanName);
 						try {
-							getBean(dep);
+							getBean(dep);//singleTon 当前类
 						}
 						catch (NoSuchBeanDefinitionException ex) {
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
@@ -323,7 +323,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// Create bean instance.
-				if (mbd.isSingleton()) {
+				if (mbd.isSingleton()) {//判断BeanDefinition 是否是单例
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							return createBean(beanName, mbd, args);
@@ -1342,28 +1342,28 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				mbd = this.mergedBeanDefinitions.get(beanName);
 			}
 
-			if (mbd == null || mbd.stale) {
+			if (mbd == null || mbd.stale) {//  mdb = null or   stale是否允许重新merge
 				previous = mbd;
-				if (bd.getParentName() == null) {
+				if (bd.getParentName() == null) {//parent attribute==null
 					// Use copy of given root bean definition.
 					if (bd instanceof RootBeanDefinition rootBeanDef) {
 						mbd = rootBeanDef.cloneBeanDefinition();
 					}
 					else {
-						mbd = new RootBeanDefinition(bd);
+						mbd = new RootBeanDefinition(bd);//没有Parent 属性会设置为 RootBeanDefinition
 					}
 				}
-				else {
+				else {//存在Parent属性
 					// Child bean definition: needs to be merged with parent.
 					BeanDefinition pbd;
 					try {
 						String parentBeanName = transformedBeanName(bd.getParentName());
-						if (!beanName.equals(parentBeanName)) {
-							pbd = getMergedBeanDefinition(parentBeanName);
+						if (!beanName.equals(parentBeanName)) {//当前beanName 和 parentName 不一样
+							pbd = getMergedBeanDefinition(parentBeanName);//获取parentDefinition
 						}
 						else {
 							if (getParentBeanFactory() instanceof ConfigurableBeanFactory parent) {
-								pbd = parent.getMergedBeanDefinition(parentBeanName);
+								pbd = parent.getMergedBeanDefinition(parentBeanName);//尝试在parentFactory查找
 							}
 							else {
 								throw new NoSuchBeanDefinitionException(parentBeanName,
@@ -1377,8 +1377,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
 					// Deep copy with overridden values.
-					mbd = new RootBeanDefinition(pbd);
-					mbd.overrideFrom(bd);
+					mbd = new RootBeanDefinition(pbd);//将pbd设置为 RootBeanDefinition
+					mbd.overrideFrom(bd);//覆盖BeanDefinition的部分属性
 				}
 
 				// Set default singleton scope, if not configured before.
@@ -1522,7 +1522,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		String className = mbd.getBeanClassName();
 		if (className != null) {
 			Object evaluated = evaluateBeanDefinitionString(className, mbd);
-			if (!className.equals(evaluated)) {
+			if (!className.equals(evaluated)) {//4.2 版本动态表达式的支持
 				// A dynamically resolved expression, supported as of 4.2...
 				if (evaluated instanceof Class<?> clazz) {
 					return clazz;

@@ -171,7 +171,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * Return the (raw) singleton object registered under the given name.
+	 * Return the (raw) singleton object registered under the given name.通过名字指定返回原始单例注册下的对象
 	 * <p>Checks already instantiated singletons and also allows for an early
 	 * reference to a currently created singleton (resolving a circular reference).
 	 * @param beanName the name of the bean to look for
@@ -183,7 +183,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		// Quick check for existing instance without full singleton lock
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
-			singletonObject = this.earlySingletonObjects.get(beanName);
+			singletonObject = this.earlySingletonObjects.get(beanName);//早期单例对象Map
 			if (singletonObject == null && allowEarlyReference) {
 				synchronized (this.singletonObjects) {
 					// Consistent creation of early reference within full singleton lock

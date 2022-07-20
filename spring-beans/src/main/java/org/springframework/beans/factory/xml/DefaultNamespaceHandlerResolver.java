@@ -148,7 +148,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 	}
 
 	/**
-	 * Load the specified NamespaceHandler mappings lazily.
+	 * Load the specified NamespaceHandler mappings lazily. 延迟加载指定的 namespace mapping
 	 */
 	private Map<String, Object> getHandlerMappings() {
 		Map<String, Object> handlerMappings = this.handlerMappings;

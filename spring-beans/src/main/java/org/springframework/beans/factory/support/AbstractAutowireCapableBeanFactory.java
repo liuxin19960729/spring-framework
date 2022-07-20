@@ -493,8 +493,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		RootBeanDefinition mbdToUse = mbd;
 
-		// Make sure bean class is actually resolved at this point, and
-		// clone the bean definition in case of a dynamically resolved Class
+		// Make sure bean class is actually resolved at this point, and 确保在这个点 bean的实际Class已经解决
+		// clone the bean definition in case of a dynamically resolved Class在动态解析Class里面clone BeanDefinition
 		// which cannot be stored in the shared merged bean definition.
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
@@ -502,7 +502,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			mbdToUse.setBeanClass(resolvedClass);
 		}
 
-		// Prepare method overrides.
+		// Prepare method overrides.准备方法的覆盖
 		try {
 			mbdToUse.prepareMethodOverrides();
 		}
@@ -513,7 +513,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);//动态代理替代类
 			if (bean != null) {
 				return bean;
 			}
@@ -564,7 +564,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
-			instanceWrapper = createBeanInstance(beanName, mbd, args);
+			instanceWrapper = createBeanInstance(beanName, mbd, args);//常见BeanInstance
 		}
 		Object bean = instanceWrapper.getWrappedInstance();
 		Class<?> beanType = instanceWrapper.getWrappedClass();
@@ -601,7 +601,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
-			populateBean(beanName, mbd, instanceWrapper);
+			populateBean(beanName, mbd, instanceWrapper);//填充Bean
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -1091,7 +1091,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @return the shortcut-determined bean instance, or {@code null} if none
 	 */
 	@Nullable
-	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
+	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {//Proxy 实现接口
 		Object bean = null;
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
@@ -1146,14 +1146,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
 		// Make sure bean class is actually resolved at this point.
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
-
+        //判断创建的beanClass is Public || 非public是否可以访问
 		if (beanClass != null && !Modifier.isPublic(beanClass.getModifiers()) && !mbd.isNonPublicAccessAllowed()) {
 			throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 					"Bean class isn't public, and non-public access not allowed: " + beanClass.getName());
 		}
 
 		Supplier<?> instanceSupplier = mbd.getInstanceSupplier();
-		if (instanceSupplier != null) {//制动的供应商获取对象
+		if (instanceSupplier != null) {//BeadDefinition 是否提供实例化工具
 			return obtainFromSupplier(instanceSupplier, beanName);
 		}
 
@@ -1723,7 +1723,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * Initialize the given bean instance, applying factory callbacks
-	 * as well as init methods and bean post processors.
+	 * as well as init methods and bean post processors.//bean instance init BeanPostProcessor init-method
 	 * <p>Called from {@link #createBean} for traditionally defined beans,
 	 * and from {@link #initializeBean} for existing bean instances.
 	 * @param beanName the bean name in the factory (for debugging purposes)
@@ -1747,7 +1747,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			invokeInitMethods(beanName, wrappedBean, mbd);
+			invokeInitMethods(beanName, wrappedBean, mbd);//执行 init-Method
 		}
 		catch (Throwable ex) {
 			throw new BeanCreationException(

@@ -29,8 +29,7 @@ public class Test1 {
 //		FMethod bean2 = applicationContext.getBean(FMethod.class);
 //		System.out.println(bean2);
 
-		LifeCycleTest lifeCycleTest = applicationContext.getBean(LifeCycleTest.class);
-		System.out.println(lifeCycleTest);
-		System.out.println(lifeCycleTest.isRunning());
+		Object liuxinDepend = applicationContext.getBean("liuxinDepend");
+		System.out.println(liuxinDepend);
 	}
 }

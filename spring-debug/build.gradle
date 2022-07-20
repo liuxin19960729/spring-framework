@@ -10,7 +10,6 @@ repositories {
 }
 
 dependencies {
-    api(project(":spring-core"))
     api(project(":spring-context"))
-    api(project(":spring-beans"))
+    api(project(":spring-jdbc"))
 }

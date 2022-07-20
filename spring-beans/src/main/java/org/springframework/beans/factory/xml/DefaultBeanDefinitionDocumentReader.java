@@ -147,7 +147,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
-		preProcessXml(root);// 扩展点 将自定义的xml转换成标准的BeanDefinition
+		preProcessXml(root);
 		parseBeanDefinitions(root, this.delegate);
 		postProcessXml(root);
 
@@ -173,12 +173,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
-				if (node instanceof Element ele) {
+				if (node instanceof Element ele) {//通过不同的命名空间
 					if (delegate.isDefaultNamespace(ele)) {//判断是否和我是一个命名空间的
 						parseDefaultElement(ele, delegate);
 					}
 					else {
-						delegate.parseCustomElement(ele);
+						delegate.parseCustomElement(ele);//处理自定义Element
 					}
 				}
 			}
@@ -196,6 +196,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			processAliasRegistration(ele);
 		}
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {//bean 元素
+			//<alias name="The name of bean" alias="alias"></alias>
 			processBeanDefinition(ele, delegate);
 		}
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {

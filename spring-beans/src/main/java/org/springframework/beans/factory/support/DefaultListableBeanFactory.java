@@ -553,7 +553,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			// Only consider bean as eligible if the bean name is not defined as alias for some other bean.
 			if (!isAlias(beanName)) {
 				try {
-					RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+					RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);//获取合并后的RootBeanBeanDefinition
 					// Only check bean definition if it is complete.
 					if (!mbd.isAbstract() && (allowEagerInit ||
 							(mbd.hasBeanClass() || !mbd.isLazyInit() || isAllowEagerClassLoading()) &&
@@ -1012,10 +1012,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 					}
 				}
 				else {
-					removeAlias(beanName);
+					removeAlias(beanName);//允许覆盖 删除 beanName 的别名 选择
 				}
 			}
-			if (hasBeanCreationStarted()) {//不能在启动事件修改集合
+			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				synchronized (this.beanDefinitionMap) {
 					this.beanDefinitionMap.put(beanName, beanDefinition);
@@ -1155,7 +1155,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	/**
-	 * Update the factory's internal set of manual singleton names.
+	 * Update the factory's internal set of manual singleton names. 更新工厂手动单例名单及
 	 * @param action the modification action
 	 * @param condition a precondition for the modification action
 	 * (if this condition does not apply, the action can be skipped)
