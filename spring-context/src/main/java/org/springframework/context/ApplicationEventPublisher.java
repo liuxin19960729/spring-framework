@@ -53,12 +53,13 @@ public interface ApplicationEventPublisher {
 
 	/**
 	 * Notify all <strong>matching</strong> listeners registered with this
-	 * application of an event.
+	 * application of an event.通知所有的通过注册的缉拿挺起
 	 * <p>If the specified {@code event} is not an {@link ApplicationEvent},
-	 * it is wrapped in a {@link PayloadApplicationEvent}.
+	 * it is wrapped in a {@link PayloadApplicationEvent}.如果指定的不是ApplicationEvent 会被包装
 	 * <p>Such an event publication step is effectively a hand-off to the
 	 * multicaster and does not imply synchronous/asynchronous execution
-	 * or even immediate execution at all. Event listeners are encouraged
+	 * or even immediate execution at all并不意味着同步或异步立即执行 .
+	 * Event listeners are encouraged 事件监听这种方式被谷类
 	 * to be as efficient as possible, individually using asynchronous
 	 * execution for longer-running and potentially blocking operations.
 	 * @param event the event to publish

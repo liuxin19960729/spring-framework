@@ -75,6 +75,8 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
  *<!DOCTYPE beans  SYSTEM "http://www.springframework.org/schema/beans/spring-beans.dtd">
  or <!DOCTYPE beans PUBLIC "xxx" "http://www.springframework.org/schema/beans/spring-beans.dtd">
  *
+ *resources META_INF/spring.schemas  不存在  通过 http 访问
+ *
  * */
 	@Override
 	@Nullable

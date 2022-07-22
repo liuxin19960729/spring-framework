@@ -1,35 +1,19 @@
 package com.liuxin;
 
-import com.liuxin.entity.*;
-import com.liuxin.entity.lifyCycle.LifeCycleTest;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import com.liuxin.entity.InnertClassTest;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 public class Test1 {
 	public static void main(String[] args) {
-		ClassPathXmlApplicationContext applicationContext =
-				new ClassPathXmlApplicationContext("application.xml");
-//		Object ac = applicationContext.getBean("ac");
-//		A a = applicationContext.getBean(A.class);
-//		System.out.println(a);
-//		a = applicationContext.getBean(A.class);
-//		System.out.println(a==ac);
-//
-//		Object bbb = applicationContext.getBean("bbb");
-//		B bean = applicationContext.getBean(B.class);
-//		System.out.println(bean);
-//		bean = applicationContext.getBean(B.class);
-//		System.out.println(bean==bbb);
-////		BeanFactory
-////		Object cldbp = applicationContext.getBean("cldbp");
-////		System.out.println(cldbp);
-//		System.out.println(applicationContext.getBean("c"));
 
-//		FMethod bean1 = applicationContext.getBean(FMethod.class);
-//		System.out.println(bean1);
-//		FMethod bean2 = applicationContext.getBean(FMethod.class);
-//		System.out.println(bean2);
+		GenericApplicationContext applicationContext = new GenericApplicationContext();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(applicationContext);
+		reader.setValidating(true);
+		reader.loadBeanDefinitions(new ClassPathResource("application.xml"));
+		applicationContext.refresh();
+		InnertClassTest bean = applicationContext.getBean(InnertClassTest.class);
+		System.out.println(bean.getA()==applicationContext.getBean("ss"));
 
-		Object liuxinDepend = applicationContext.getBean("liuxinDepend");
-		System.out.println(liuxinDepend);
 	}
 }

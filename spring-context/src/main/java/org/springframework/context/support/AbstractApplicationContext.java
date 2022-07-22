@@ -942,7 +942,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		initLifecycleProcessor();
 
 		// Propagate refresh to lifecycle processor first.
-		getLifecycleProcessor().onRefresh();
+		getLifecycleProcessor().onRefresh();//Lifecycle 接口 start()方法
 
 		// Publish the final event.
 		publishEvent(new ContextRefreshedEvent(this));
@@ -984,6 +984,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see ConfigurableApplicationContext#SHUTDOWN_HOOK_THREAD_NAME
 	 * @see #close()
 	 * @see #doClose()
+	 *
+	 * 注册jvm关闭的hook
 	 */
 	@Override
 	public void registerShutdownHook() {

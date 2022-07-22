@@ -935,12 +935,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		// Trigger post-initialization callback for all applicable beans...
+		// SmartInitializingSingleton 接口的实现 一般在常规 Bean初始化结束之后用于数据的初始化
+		// note 只适用于no-lazy 的  singleton scope 适用
 		for (String beanName : beanNames) {
 			Object singletonInstance = getSingleton(beanName);
 			if (singletonInstance instanceof SmartInitializingSingleton smartSingleton) {
 				StartupStep smartInitialize = this.getApplicationStartup().start("spring.beans.smart-initialize")
 						.tag("beanName", beanName);
-				smartSingleton.afterSingletonsInstantiated();
+				smartSingleton.afterSingletonsInstantiated();//
 				smartInitialize.end();
 			}
 		}

@@ -34,8 +34,7 @@ package org.springframework.beans.factory;
  * not just in an {@link org.springframework.context.ApplicationContext} environment.
  *
  * <p><b>NOTE:</b> If you intend to start/manage asynchronous tasks, preferably
- * implement {@link org.springframework.context.Lifecycle} instead which offers
- * a richer model for runtime management and allows for phased startup/shutdown.
+ * a richer model for runtime management and a * implement {@link org.springframework.context.Lifecycle} instead which offersllows for phased startup/shutdown. //开始 管理异步工作实现LifeCyclee接口
  *
  * @author Juergen Hoeller
  * @since 4.1

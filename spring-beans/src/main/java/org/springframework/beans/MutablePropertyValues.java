@@ -358,7 +358,7 @@ public class MutablePropertyValues implements PropertyValues, Serializable {
 
 	/**
 	 * Return whether this holder contains converted values only ({@code true}),
-	 * or whether the values still need to be converted ({@code false}).
+	 * or whether the values still need to be converted ({@code false}). 判断是否是转换已经转换
 	 */
 	public boolean isConverted() {
 		return this.converted;
